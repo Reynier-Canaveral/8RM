@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Beneficiary</title>
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* General Body and Font Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main Dashboard Container using Flexbox */
+        .dashboard-container {
+            display: flex;
+            width: 1200px;
+            height: 700px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background-color: #fefcf5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* --- Custom Logo Styles --- */
+        .logo-text { display: flex; flex-direction: column; }
+        .logo-text .main-name { font-size: 24px; font-weight: bold; display: flex; align-items: center; }
+        .logo-text .main-name .logo-8 { color: #22c55e; } /* Green "8" */
+        .logo-text .main-name .logo-rm { color: #1e3a8a; margin-left: 0.2rem; } /* Blue "RM" */
+        .logo-text .sub-name { font-size: 10px; color: #facc15; font-weight: bold; } /* Yellow subtext */
+
+        /* Navigation Menu */
+        .navigation ul { list-style: none; padding: 0; margin: 0; }
+        .navigation li a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navigation li a .link-text { display: flex; align-items: center; }
+        .navigation li a i { margin-right: 15px; font-size: 18px; width: 20px; text-align: center; }
+        .navigation li a:hover { background-color: #e2e8f0; }
+        .navigation li.active > a { background-color: #1e3a8a; color: white; }
+        
+        /* Dropdown Arrow Styling */
+        .dropdown-arrow { font-size: 12px; transition: transform 0.3s ease; }
+        
+        /* Submenu Styling */
+        .submenu { list-style: none; padding-left: 25px; margin: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; }
+        li.open > .submenu { max-height: 200px; margin-bottom: 10px; }
+        li.open > a .dropdown-arrow { transform: rotate(180deg); }
+        .submenu li a { padding: 10px 15px; font-size: 14px; font-weight: normal; background-color: transparent; color: #4A5568; border-radius: 6px; }
+        .submenu li a:hover { background-color: #d1d9e4; }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section inside Main Content */
+        .main-content header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .main-content h1 { margin: 0; font-size: 36px; font-weight: 900; color: #1a202c; }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .search-bar { position: relative; }
+        .search-bar i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #a0aec0; }
+        .search-bar input { width: 250px; padding: 10px 15px 10px 40px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 14px; transition: border-color 0.3s; }
+        .search-bar input:focus { outline: none; border-color: #3b82f6; }
+        .icon-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #718096; padding: 5px; }
+        .btn-edit { background-color: #1e3a8a; color: white; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+
+        /* Table Styling */
+        .table-container { flex-grow: 1; border: 1px solid #e2e8f0; border-radius: 8px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { position: sticky; top: 0; z-index: 10; }
+        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        th { background-color: #38A169; color: white; font-weight: 600; font-size: 14px; text-transform: uppercase; }
+        td { font-size: 15px; color: #4A5568; }
+        tbody tr:last-child td { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="logo.png.png" alt="8 RM Logo">
+                <div class="logo-text">
+                    <div class="main-name">
+                        <span class="logo-8">8</span><span class="logo-rm">R M</span>
+                    </div>
+                    <span class="sub-name">Utility Projects Construction</span>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li><a href="OVERVIEW.html"><span class="link-text"><i class="fas fa-chart-bar"></i> Overview</span></a></li>
+                    <li><a href="Employee.html"><span class="link-text"><i class="fas fa-users"></i> Employee Information</span></a></li>
+                    <!-- Government Remittances Dropdown -->
+                    <li class="active has-submenu">
+                        <a href="Pag_Ibig2Remettance.html">
+                            <span class="link-text"><i class="fas fa-file-alt"></i>Government Remittances</span>
+                            <span class="fas fa-chevron-down dropdown-arrow"></span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="Pag_Ibig.html">Pag-IBIG</a></li>
+                            <li><a href="phil_heath.html">PhilHealth</a></li>
+                            <li><a href="SSS.html">SSS</a></li>
+                        </ul>
+                    </li>
+                    <!-- Changelog Dropdown -->
+                    <li class="has-submenu">
+                        <a href="#">
+                             <span class="link-text"><i class="fas fa-book"></i> Changelog</span>
+                             <span class="fas fa-chevron-down dropdown-arrow"></span>
+                        </a>
+                         <ul class="submenu">
+                            <li><a href="Modifications.html">Modifications</a></li>
+                            <li><a href="#">History Remittances</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><span class="link-text"><i class="fas fa-archive"></i> Employee Archive</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Pag-IBIG</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search Name">
+                    </div>
+                    <button class="icon-btn"><i class="fas fa-filter"></i></button>
+                </div>
+            </header>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>No.</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ruth Ann Concepcion</td>
+                            <td>xx</td>
+                            <td>Active</td>
+                            <td>500.00</td>
+                            <td><button class="btn-edit">EDIT</button></td>
+                        </tr>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>xy</td>
+                            <td>Active</td>
+                            <td>500.00</td>
+                            <td><button class="btn-edit">EDIT</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JS for all dropdowns
+            const dropdownToggles = document.querySelectorAll('.has-submenu > a');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const parentLi = toggle.parentElement;
+                    parentLi.classList.toggle('open');
+                });
+            });
+
+            // Auto-open active dropdown on page load
+            const activeMenuItem = document.querySelector('.navigation li.active.has-submenu');
+            if(activeMenuItem) {
+                activeMenuItem.classList.add('open');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* General Body and Font Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main Dashboard Container using Flexbox */
+        .dashboard-container {
+            display: flex;
+            width: 1200px;
+            height: 700px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: #fefcf5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text .main-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4A5568;
+        }
+
+        .logo-text .sub-name {
+            font-size: 10px;
+            color: #718096;
+        }
+
+        /* Navigation Menu */
+        .navigation ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navigation li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navigation li a i {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .navigation li a:hover {
+            background-color: #e2e8f0;
+        }
+
+        .navigation li.active a {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 50px;
+            background-color: #ffffff;
+            position: relative; /* For positioning the ID badge */
+        }
+
+        /* Employee Profile Header */
+        .employee-header {
+            margin-bottom: 30px;
+        }
+
+        .employee-header h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: bold;
+            color: #1a202c;
+        }
+
+        .employee-header p {
+            margin: 5px 0 0;
+            font-size: 24px;
+            color: #4A5568;
+        }
+
+        /* ID Badge */
+        .id-badge {
+            position: absolute;
+            top: 40px;
+            right: 50px;
+            background-color: #2c5282;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .id-badge .id-label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .id-badge .id-number {
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        /* Employee Details Grid Layout */
+        .employee-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .info-column-left {
+            background-color: #fefcf5;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .info-group {
+            margin-bottom: 25px;
+        }
+        
+        .info-group p, .info-column-right p {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #4A5568;
+        }
+
+        /* Emergency Contact Section */
+        .emergency-contact h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-edit {
+            background-color: #4a5568;
+            color: white;
+        }
+
+        .btn-separate {
+            background-color: #facc15;
+            color: #4A5568;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="logo.png.png" alt="8 RM Logo">
+                <div class="logo-text">
+                    <span class="main-name">8 R M</span>
+                    <span class="sub-name">Utility Projects Construction</span>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Overview</a></li>
+                    <li class="active"><a href="#"><i class="fas fa-users"></i> Employee Information</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> Government Beneficiary</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> Modification Logs</a></li>
+                    <li><a href="#"><i class="fas fa-archive"></i> Employee Archive</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="id-badge">
+                <div class="id-label">ID:</div>
+                <div class="id-number">XX</div>
+            </div>
+
+            <div class="employee-header">
+                <h1>Ruth Ann Concepcion</h1>
+                <p>Office Manager</p>
+            </div>
+
+            <div class="employee-details">
+                <div class="info-column-left">
+                    <div class="info-group">
+                        <p>Address:</p>
+                        <p>Contact No.:</p>
+                        <p>Birth Date:</p>
+                        <p>Status:</p>
+                    </div>
+                    <div class="emergency-contact">
+                        <h3>EMERGENCY CONTACT INFORMATION</h3>
+                        <p>Name:</p>
+                        <p>Contact No.:</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-edit">EDIT</button>
+                        <button class="btn btn-separate">SEPARATE</button>
+                    </div>
+                </div>
+                <div class="info-column-right">
+                    <div class="info-group">
+                        <p>Date Hired:</p>
+                        <p>Assigned Project:</p>
+                        <p>Daily Rate:</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

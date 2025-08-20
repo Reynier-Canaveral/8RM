@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Information</title>
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* General Body and Font Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+        }
+
+        /* Main Dashboard Container using Flexbox */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: #fefcf5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+        }
+
+              .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* --- Custom Logo Styles --- */
+        .logo-text { display: flex; flex-direction: column; }
+        .logo-text .main-name { font-size: 24px; font-weight: bold; display: flex; align-items: center; }
+        .logo-text .main-name .logo-8 { color: #22c55e; } /* Green "8" */
+        .logo-text .main-name .logo-rm { color: #1e3a8a; margin-left: 0.2rem; } /* Blue "RM" */
+        .logo-text .sub-name { font-size: 10px; color: #facc15; font-weight: bold; } /* Yellow subtext */
+
+        /* Navigation Menu */
+        .navigation ul { list-style: none; padding: 0; margin: 0; }
+        .navigation li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navigation li a i { margin-right: 15px; font-size: 18px; width: 20px; text-align: center; }
+        .navigation li a:hover { background-color: #e2e8f0; }
+        .navigation li.active a { background-color: #1e3a8a; color: white; }
+
+        /* --- DROPDOWN STYLES --- */
+        .dropdown-arrow { margin-left: auto; font-size: 12px; transition: transform 0.3s ease; }
+        .submenu { list-style: none; padding-left: 25px; margin: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; }
+        .navigation li.open > .submenu { max-height: 200px; margin-top: 5px; margin-bottom: 5px; }
+        .navigation li.open > a .dropdown-arrow { transform: rotate(180deg); }
+        .submenu li a { padding: 10px 30px; color: #5f6b7a; background-color: transparent; font-size: 15px; }
+        .submenu li.sub-active a { background-color: #e5e7eb; font-weight: 600; }
+        .submenu li a:hover { background-color: #e2e8f0; }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section inside Main Content */
+        .main-content header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .main-content h1 { margin: 0; font-size: 36px; font-weight: 900; color: #1a202c; }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .search-bar { position: relative; }
+        .search-bar i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #a0aec0; }
+        .search-bar input { width: 250px; padding: 10px 15px 10px 40px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 14px; transition: border-color 0.3s; }
+        .search-bar input:focus { outline: none; border-color: #3b82f6; }
+        .icon-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #718096; padding: 5px; }
+        .user-btn { background-color: #fefcbf; border-radius: 8px; color: #4A5568; padding: 8px 10px; }
+
+        /* Table Styling */
+        .table-container { flex-grow: 1; border: 1px solid #e2e8f0; border-radius: 8px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { position: sticky; top: 0; z-index: 10; }
+        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #35e40a; color: #edeff1; font-weight: 600; font-size: 14px; text-transform: uppercase; }
+        td { font-size: 15px; color: #4A5568; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background-color: #f9fafb; }
+
+        /* --- FILTER DROPDOWN STYLES --- */
+        .filter-container {
+            position: relative;
+            display: inline-block;
+        }
+        .filter-dropdown {
+            display: none; /* Hidden by default */
+            position: absolute;
+            right: 0;
+            top: 40px; /* Position below the button */
+            background-color: white;
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 100;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-dropdown label {
+            display: block;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        .filter-dropdown label:hover {
+            background-color: #f1f5f9;
+        }
+        .filter-dropdown label input {
+            margin-right: 10px;
+        }
+        .filter-dropdown.show {
+            display: block; /* Show the dropdown */
+        }
+        
+        /* --- NEW: STYLES FOR THE DETAILED ADD EMPLOYEE MODAL --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+        }
+        .modal-content {
+            background-color: #fefefe; 
+            margin: 5% auto; 
+            padding: 40px; 
+            border: 1px solid #ddd; 
+            width: 90%; 
+            max-width: 800px; /* Wider for the new form */
+            border-radius: 12px; 
+            position: relative; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .close-btn {
+            color: #aaa; 
+            position: absolute; 
+            top: 15px; 
+            right: 25px; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer;
+        }
+        .close-btn:hover, .close-btn:focus { color: black; }
+
+        #addEmployeeForm h2 { 
+            margin-top: 0; 
+            margin-bottom: 25px; 
+            color: #1a202c; 
+            text-align: center; 
+            font-weight: 600;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 20px 30px; 
+        }
+        .form-field { display: flex; flex-direction: column; }
+        .form-field label { 
+            font-weight: 500; 
+            color: #4A5568; 
+            margin-bottom: 6px; 
+            font-size: 14px; 
+        }
+        .form-field input, .form-field select {
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-size: 15px; 
+            background-color: #f8f9fa;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .form-field input:focus, .form-field select:focus {
+            outline: none; 
+            border-color: #1e3a8a; 
+            background-color: #fff;
+        }
+        .birth-date-group { display: flex; gap: 10px; }
+        .birth-date-group select { flex-grow: 1; }
+        .contact-group { display: flex; align-items: center; }
+        .contact-group .country-code { 
+            padding: 10px; 
+            background-color: #e9ecef; 
+            border: 1px solid #ccc; 
+            border-right: none; 
+            border-radius: 5px 0 0 5px; 
+        }
+        .contact-group input { border-radius: 0 5px 5px 0; }
+        
+        .emergency-contact {
+            grid-column: 1 / -1; 
+            margin-top: 20px; 
+            padding-top: 20px; 
+            border-top: 1px solid #e0e0e0;
+        }
+        .emergency-contact h3 {
+            margin-top: 0; 
+            margin-bottom: 20px; 
+            font-size: 18px; 
+            text-align: center; 
+            font-weight: 600; 
+            color: #333;
+        }
+        .emergency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 30px; }
+        
+        #addEmployeeForm button[type="submit"] {
+            grid-column: 1 / -1; 
+            background-color: #1e3a8a; 
+            color: white; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            margin-top: 20px; 
+            transition: background-color 0.3s; 
+            font-weight: 500;
+        }
+        #addEmployeeForm button[type="submit"]:hover { background-color: #2546a7; }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="logo.png.png" alt="8 RM Logo Icon">
+                <div class="logo-text">
+                    <div class="main-name">
+                        <span class="logo-8">8</span><span class="logo-rm">R M</span>
+                    </div>
+                    <span class="sub-name">Utility Projects Construction</span>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <!-- Active state is on Employee Information -->
+                    <li><a href="OVERVIEW.html"><i class="fas fa-chart-bar"></i> Overview</a></li>
+                    <li class="active"><a href="Employee.html"><i class="fas fa-users"></i> Employee Information</a></li>
+                    <!-- Government Remittances Dropdown -->
+                    <li class="has-submenu">
+                        <a href="Pag_Ibig2Remettance.html" class="dropdown-toggle">
+                            <i class="fas fa-file-alt"></i> Government Remittances
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="Pag_Ibig.html">Pag-IBIG</a></li>
+                            <li><a href="phil_heath.html">PhilHealth</a></li>
+                            <li><a href="SSS.html">SSS</a></li>
+                        </ul>
+                    </li>
+                    <!-- Changelog Dropdown -->
+                    <li class="has-submenu">
+                        <a href="Changelog.html" class="dropdown-toggle">
+                            <i class="fas fa-book"></i> Changelog
+                             <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                         <ul class="submenu">
+                            <li><a href="Modifications.html">Modifications</a></li>
+                            <li><a href="History_Remettance.html">History Remittances</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="EMPLOYEE_ARCHIVE.html"><i class="fas fa-archive"></i> Employee Archive</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>EMPLOYEE</h1> 
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search Name">
+                    </div>
+                    <!-- Filter Button and Dropdown Container -->
+                    <div class="filter-container">
+                        <button id="filterBtn" class="icon-btn"><i class="fas fa-filter"></i></button>
+                        <div id="filterDropdown" class="filter-dropdown">
+                            <label><input type="checkbox" name="position" value="Engineer"> Engineer</label>
+                            <label><input type="checkbox" name="position" value="Technician"> Technician</label>
+                            <label><input type="checkbox" name="position" value="Project In-Charge"> Project In-Charge</label>
+                            <label><input type="checkbox" name="position" value="Project Engineer"> Project Engineer</label>
+                            <label><input type="checkbox" name="position" value="Office Manager"> Office Manager</label>
+                            <label><input type="checkbox" name="position" value="Liaison Officer"> Liaison Officer</label>
+                            <label><input type="checkbox" name="position" value="Manager"> Manager</label>
+                            <label><input type="checkbox" name="position" value="Project Manager"> Project Manager</label>
+                            <label><input type="checkbox" name="position" value="Document Controller"> Document Controller</label>
+                            <label><input type="checkbox" name="position" value="Supervisor"> Supervisor</label>
+                            <label><input type="checkbox" name="position" value="Safety Officer"> Safety Officer</label>
+                            <label><input type="checkbox" name="position" value="Foreman"> Foreman</label>
+                            <label><input type="checkbox" name="position" value="Lead-Man Technician"> Lead-Man Technician</label>
+                        </div>
+                    </div>
+                    <!-- This button will open the modal -->
+                    <button id="addUserBtn" class="icon-btn user-btn"><i class="fas fa-user-plus"></i></button>
+                </div>
+            </header>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Existing Employees -->
+                        <tr><td>Ruth Ann Concepcion</td><td>Office Manager</td><td>xx</td><td>Active</td></tr>
+                        <tr><td>John Doe</td><td>Project Engineer</td><td>xy</td><td>Active</td></tr>
+                        <tr><td>Jane Smith</td><td>Accountant</td><td>xz</td><td>Active</td></tr>
+                        <tr><td>Michael Johnson</td><td>Site Supervisor</td><td>xa</td><td>On Leave</td></tr>
+                        <tr><td>Emily Williams</td><td>HR Specialist</td><td>xb</td><td>Active</td></tr>
+                        <tr><td>David Brown</td><td>Construction Worker</td><td>xc</td><td>Inactive</td></tr>
+                        <tr><td>Sarah Davis</td><td>Architect</td><td>xd</td><td>Active</td></tr>
+                        <tr><td>James Wilson</td><td>Foreman</td><td>xe</td><td>Active</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- NEW: THE DETAILED MODAL FOR ADDING AN EMPLOYEE -->
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <form id="addEmployeeForm">
+                <h2>EMPLOYEE INFORMATION</h2>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="fullName">Name:</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="contactNo">Contact No.:</label>
+                        <div class="contact-group">
+                            <span class="country-code">+63</span>
+                            <input type="tel" id="contactNo" name="contactNo" pattern="[0-9]{10}" placeholder="9123456789" required>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label>Birth Date:</label>
+                        <div class="birth-date-group">
+                            <select id="birthMonth" name="birthMonth" required></select>
+                            <select id="birthDay" name="birthDay" required></select>
+                            <select id="birthYear" name="birthYear" required></select>
+                        </div>
+                    </div>
+                     <div class="form-field">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="Active">Active</option>
+                            <option value="On Leave">On Leave</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="position">Position:</label>
+                        <select id="position" name="position" required>
+                            <option value="">-- Select Position --</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Technician">Technician</option>
+                            <option value="Project In-Charge">Project In-Charge</option>
+                            <option value="Project Engineer">Project Engineer</option>
+                            <option value="Office Manager">Office Manager</option>
+                            <option value="Liaison Officer">Liaison Officer</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Project Manager">Project Manager</option>
+                            <option value="Document Controller">Document Controller</option>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Safety Officer">Safety Officer</option>
+                            <option value="Foreman">Foreman</option>
+                            <option value="Lead-Man Technician">Lead-Man Technician</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="dateHired">Date Hired:</label>
+                        <input type="date" id="dateHired" name="dateHired" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="assignedProject">Assigned Project:</label>
+                        <input type="text" id="assignedProject" name="assignedProject" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="dailyRate">Daily Rate:</label>
+                        <input type="number" id="dailyRate" name="dailyRate" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="emergency-contact">
+                    <h3>EMERGENCY CONTACT INFORMATION</h3>
+                    <div class="emergency-grid">
+                        <div class="form-field">
+                            <label for="emergencyName">Name:</label>
+                            <input type="text" id="emergencyName" name="emergencyName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="emergencyContactNo">Contact No.:</label>
+                            <input type="tel" id="emergencyContactNo" name="emergencyContactNo" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit">Add Employee</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Sidebar Dropdown Logic ---
+            const dropdownToggles = document.querySelectorAll('.has-submenu > a');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent link from navigating
+                    this.parentElement.classList.toggle('open');
+                });
+            });
+
+            // --- FILTER DROPDOWN FUNCTIONALITY ---
+            const filterBtn = document.getElementById('filterBtn');
+            const filterDropdown = document.getElementById('filterDropdown');
+            const positionCheckboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
+
+            filterBtn.onclick = function(event) {
+                event.stopPropagation();
+                filterDropdown.classList.toggle('show');
+            }
+
+            const filterTable = () => {
+                const selectedPositions = Array.from(positionCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+
+                document.querySelectorAll('table tbody tr').forEach(row => {
+                    const positionCell = row.querySelector('td:nth-child(2)');
+                    if (positionCell) {
+                        const position = positionCell.textContent.trim();
+                        if (selectedPositions.length === 0 || selectedPositions.includes(position)) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                });
+            };
+            positionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', filterTable));
+
+            // --- NEW: ADD EMPLOYEE MODAL AND FORM LOGIC ---
+            const modal = document.getElementById('addEmployeeModal');
+            const addUserBtn = document.getElementById('addUserBtn');
+            const closeBtn = document.querySelector('.modal .close-btn');
+            const addEmployeeForm = document.getElementById('addEmployeeForm');
+            const tableBody = document.querySelector('table tbody');
+
+            addUserBtn.onclick = function() {
+                modal.style.display = "block";
+                populateDateDropdowns(); // Populate dates when modal is opened
+            }
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Close dropdown if clicked outside of it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+                if (!filterDropdown.contains(event.target) && !filterBtn.contains(event.target)) {
+                    filterDropdown.classList.remove('show');
+                }
+            }
+
+            // Handle the form submission
+            addEmployeeForm.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                
+                const name = document.getElementById('fullName').value;
+                const position = document.getElementById('position').value;
+                const status = document.getElementById('status').value;
+                const id = document.getElementById('assignedProject').value || 'N/A'; // Using project as a placeholder for ID
+
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
+                    <td>${name}</td>
+                    <td>${position}</td>
+                    <td>${id}</td>
+                    <td>${status}</td>
+                `;
+
+                modal.style.display = "none";
+                addEmployeeForm.reset();
+            });
+
+            function populateDateDropdowns() {
+                const monthSelect = document.getElementById('birthMonth');
+                const daySelect = document.getElementById('birthDay');
+                const yearSelect = document.getElementById('birthYear');
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                
+                if(monthSelect.options.length <= 1) { 
+                    monthSelect.innerHTML = '<option value="">mm</option>';
+                    months.forEach((month, index) => {
+                        monthSelect.add(new Option(month, index + 1));
+                    });
+                }
+
+                if(daySelect.options.length <= 1) {
+                    daySelect.innerHTML = '<option value="">dd</option>';
+                    for(let i = 1; i <= 31; i++) {
+                        daySelect.add(new Option(i, i));
+                    }
+                }
+
+                if(yearSelect.options.length <= 1) {
+                    yearSelect.innerHTML = '<option value="">yyyy</option>';
+                    const currentYear = new Date().getFullYear();
+                    for(let i = currentYear; i >= currentYear - 80; i--) {
+                        yearSelect.add(new Option(i, i));
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

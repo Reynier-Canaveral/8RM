@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8RM Complete Dashboard</title>
+    <!-- Using Font Awesome for icons from a CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* --- General Body and Font Styles --- */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Main Dashboard Container --- */
+        .dashboard-container {
+            display: flex;
+            width: 1200px;
+            height: 700px; /* Fixed height is crucial for the contained scroll area */
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Hide outer scrollbars */
+        }
+
+        /* --- Sidebar Styling --- */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: #fefcf5;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-left: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text .main-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        .logo-text .sub-name {
+            font-size: 0.7rem;
+            color: #facc15;
+            font-weight: bold;
+        }
+
+        /* --- Navigation Menu --- */
+        .navigation ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navigation li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navigation li a i {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .navigation li a:hover {
+            background-color: #e2e8f0;
+        }
+
+        .navigation li.active a {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        /* --- THIS IS THE KEY: A single wrapper for all scrollable content --- */
+        .main-content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable vertical scrolling for this container ONLY */
+        }
+        
+        /* Custom scrollbar styling for the main content area */
+        .main-content-wrapper::-webkit-scrollbar {
+          width: 8px;
+        }
+        .main-content-wrapper::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+        .main-content-wrapper::-webkit-scrollbar-thumb {
+          background: #c1c1c1;
+          border-radius: 10px;
+        }
+        .main-content-wrapper::-webkit-scrollbar-thumb:hover {
+          background: #a8a8a8;
+        }
+        
+        /* --- STYLING FOR THE INDIVIDUAL CONTENT BLOCKS --- */
+        
+        /* Block 1: Overview Content */
+        .overview-content {
+            padding: 40px 50px;
+            background-color: #ffffff;
+        }
+
+        .overview-content h1 {
+            margin: 0 0 30px 0;
+            font-size: 36px;
+            font-weight: 900;
+            color: #1a202c;
+        }
+        
+        .overview-content .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .overview-content .content-section h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a202c;
+        }
+        
+        .overview-content .content-section p {
+            margin: 0;
+            line-height: 1.6;
+            color: #4A5568;
+            font-size: 16px;
+        }
+
+        /* Block 2: Project Quality Plan (Blue) */
+        .project-plan-content {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            padding: 40px 50px;
+        }
+
+        .project-plan-content h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 0 30px 0;
+        }
+
+        .project-plan-content h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0 15px 0;
+        }
+
+        .project-plan-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 90%;
+            color: #e2e8f0; /* Softer white for paragraph text */
+        }
+
+        /* Block 3: Services Offered (White, after Blue) */
+        .services-offered-content {
+            background-color: #ffffff;
+            padding: 40px 50px;
+        }
+
+        .services-offered-content h1 {
+            font-size: 36px;
+            font-weight: 900;
+            color: #1a202c;
+            margin: 0 0 30px 0;
+        }
+
+        .services-offered-content h2 {
+            font-size: 28px;
+            color: #1a202c;
+            font-weight: 900;
+            margin: 40px 0 20px 0;
+        }
+
+        .services-offered-content p {
+            margin: 0 0 15px 0;
+            line-height: 1.7;
+            color: #4A5568;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- ======================= -->
+        <!--      Left Sidebar       -->
+        <!-- ======================= -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://i.imgur.com/83pL4gG.png" alt="8 R M Logo Icon">
+                <div class="logo-text">
+                    <span class="main-name">8 R M</span>
+                    <span class="sub-name">Utility Projects Construction</span>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li class="active"><a><i class="fas fa-chart-bar"></i> Overview</a></li>
+                    <li><a><i class="fas fa-users"></i> Employee Information</a></li>
+                    <li><a><i class="fas fa-file-alt"></i> Government Beneficiary</a></li>
+                    <li><a><i class="fas fa-book"></i> Changelog</a></li>
+                    <li><a><i class="fas fa-archive"></i> Employee Archive</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- ============================================== -->
+        <!--  Main Wrapper for ALL Scrollable Content -->
+        <!-- ============================================== -->
+        <main class="main-content-wrapper">
+
+            <!-- Block 1: Overview Content -->
+            <section class="overview-content">
+                <h1>OVERVIEW</h1>
+                <div class="content-section">
+                    <p>
+                        8RM Utility Projects Construction was founded in December 2021 with the goal of
+                        providing more effective services at the most affordable prices, meeting deadlines,
+                        and maintaining high standards of quality.
+                    </p>
+                </div>
+                <div class="content-section">
+                    <h2>Vision</h2>
+                    <p>
+                        To provide top-tier design, structural engineering, and construction services as a
+                        renowned general construction firm.
+                    </p>
+                </div>
+                <div class="content-section">
+                    <h2>Mission</h2>
+                    <p>
+                        Our goal is to satisfy all of our stakeholders by providing construction excellence
+                        via the development of our team members.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Block 2: Project Quality Plan Content (Blue) -->
+            <section class="project-plan-content">
+                <h1>PROJECT QUALITY PLAN</h1>
+                <h2>Quality Objectives</h2>
+                <p>
+                    Villa magna est et in agris stat. Circum villam sunt arbores altae et fluvius parvus, ubi pisces natant. In villa habitant agricola et familia sua.
+                </p>
+                <h2>Quality Control Procedures</h2>
+                <p>
+                    Cottidie in agris laborant ut cibum habeant. Vita ruri est tranquilla et saepe laeta, procul a strepitu urbis.
+                </p>
+            </section>
+
+            <!-- Block 3: Services Offered Content (White) -->
+            <section class="services-offered-content">
+                <h1>SERVICES OFFERED</h1>
+                
+                <div class="service-category">
+                    <h2>MECHANICAL WORKS</h2>
+                    <p>
+                        Villa magna est et in agris stat. Circum villam sunt arbores altae et fluvius parvus, ubi pisces natant. In villa habitant agricola et familia sua. Cottidie in agris laborant ut cibum habeant. Vita ruri est tranquilla et saepe laeta, procul a strepitu urbis.
+                    </p>
+                </div>
+
+                <div class="service-category">
+                    <h2>Electrical and Electronic Works</h2>
+                    <p>
+                        Villa magna est et in agris stat. Circum villam sunt arbores altae et fluvius parvus, ubi pisces natant. In villa habitant agricola et familia sua. Cottidie in agris laborant ut cibum habeant. Vita ruri est tranquilla et saepe laeta, procul a strepitu urbis.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>
